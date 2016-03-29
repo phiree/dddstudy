@@ -11,9 +11,9 @@ namespace YDB.InfrastructureLayer.NHibernateImpl
         where T : Common.Domain.IDomainEntity
     {
         ISession session;
-        public NHibernateRepository()
+        public NHibernateRepository(string conn)
         {
-          session= new HybridSessionBuilder().GetSession();
+          session= new HybridSessionBuilder<T>().GetSession(conn);
         }
         public void Add(T entity)
         {

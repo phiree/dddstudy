@@ -11,22 +11,29 @@ using NHibernate.Criterion.Lambda;
 using System;
 using System.Security.Cryptography;
 using System.Text;
-
+using YDB.Domain.Model.IdentityAccess;
+using YDB.InfrastructureLayer.NHibernateImpl.Mapping;
+using YDB.Domain.Model.Orders;
 namespace YDB.InfrastructureLayer.NHibernateImpl
 {
-    public class HybridSessionBuilder
+    public class HybridSessionBuilder<T> where T :Common.Domain.IDomainEntity
     {
         private static ISession _currentSession;
         private static ISessionFactory _sessionFactory;
 
-        public ISession GetSession()
+        
+        string connname;
+        public ISession GetSession( string connname)
         {
+           
+            this.connname = connname;
             ISessionFactory factory = getSessionFactory();
             ISession session = getExistingOrNewSession(factory);
 
             return session;
         }
 
+       
         public Configuration GetConfiguration()
         {
             var configuration = new Configuration();
@@ -50,10 +57,13 @@ namespace YDB.InfrastructureLayer.NHibernateImpl
                           .Standard
                           .ConnectionString(
                                 
-                                         System.Configuration.ConfigurationManager.ConnectionStrings["jsyk_membership_conn"].ConnectionString 
+                                         System.Configuration.ConfigurationManager.ConnectionStrings[connname].ConnectionString 
                                     )
                         )
-                      .Mappings(m => m.FluentMappings.AddFromAssemblyOf<YDB.Domain.Model.IdentityAccess.Membership>())
+                      .Mappings(
+                       m => m.FluentMappings.Add
+                        (EntityMapper<T>.MapFromEntity().GetType())
+                      )
                      .ExposeConfiguration(BuildSchema)
                       .BuildSessionFactory();
                     HibernatingRhinos.Profiler.Appender.NHibernate.NHibernateProfiler.Initialize();
@@ -106,7 +116,7 @@ namespace YDB.InfrastructureLayer.NHibernateImpl
 
         public ISession GetExistingWebSession()
         {
-            return HttpContext.Current.Items[GetType().FullName] as ISession;
+            return HttpContext.Current.Items[connname ] as ISession;
         }
 
         private ISession openSessionAndAddToContext(ISessionFactory factory)
@@ -117,11 +127,7 @@ namespace YDB.InfrastructureLayer.NHibernateImpl
             return session;
         }
 
-        public static void ResetSession()
-        {
-            var builder = new HybridSessionBuilder();
-            builder.GetSession().Dispose();
-        }
+        
         public static string Decrypt(string cipherString, bool useHashing)
         {
             byte[] keyArray;
@@ -166,4 +172,20 @@ namespace YDB.InfrastructureLayer.NHibernateImpl
             return UTF8Encoding.UTF8.GetString(resultArray);
         }
     }
+
+     class EntityMapper<T>
+    {
+        static System.Collections.Generic.Dictionary<Type, FluentNHibernate.IMappingProvider> typeMap = new System.Collections.Generic.Dictionary<Type, FluentNHibernate.IMappingProvider>
+        {
+            { typeof(Membership),new MembershipMap() },
+            { typeof(Order),new OrderMap() },
+             
+        };
+      public  static FluentNHibernate.IMappingProvider MapFromEntity()
+        {
+
+            return typeMap[typeof(T)];
+        }
+    }
+
 }

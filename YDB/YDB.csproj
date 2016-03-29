@@ -65,6 +65,8 @@
     <Compile Include="Application\IdentityAccess\Memberships\IMembershipService.cs" />
     <Compile Include="Application\IdentityAccess\Memberships\MembershipDto.cs" />
     <Compile Include="Application\IdentityAccess\Memberships\MembershipService.cs" />
+    <Compile Include="Application\Orders\OrderService.cs" />
+    <Compile Include="Application\Orders\IOrderService.cs" />
     <Compile Include="Common\Domain\IDomainEntity.cs" />
     <Compile Include="Common\Repository\IRepository.cs" />
     <Compile Include="Common\Specification\And.cs" />
@@ -82,8 +84,10 @@
     <Compile Include="Domain.Model\Resources\Business.cs" />
     <Compile Include="Domain.Model\Resources\Service.cs" />
     <Compile Include="Domain.Model\Resources\Shop.cs" />
+    <Compile Include="InfrastructureLayer\OrderRepository.cs" />
     <Compile Include="InfrastructureLayer\MembershipRepository.cs" />
     <Compile Include="InfrastructureLayer\NHibernateImpl\Mapping\EntityMap.cs" />
+    <Compile Include="InfrastructureLayer\NHibernateImpl\Mapping\OrderMap.cs" />
     <Compile Include="InfrastructureLayer\NHibernateImpl\Mapping\MembershipMap.cs" />
     <Compile Include="InfrastructureLayer\NHibernateImpl\NHibernateRepository.cs" />
     <Compile Include="InfrastructureLayer\NHibernateImpl\SessionBuilder.cs" />

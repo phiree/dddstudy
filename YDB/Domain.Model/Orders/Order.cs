@@ -8,25 +8,17 @@ namespace YDB.Domain.Model.Orders
 {
     public class Order:Common.Domain.IDomainEntity
     {
-        public string Id
+        public virtual string Id
         {
-            get
-            {
-                return id;
-            }
-
-            set
-            {
-                id = Guid.NewGuid().ToString();
-            }
+            get;set;
         }
 
-        public static Order Create()
+        public   static Order Create()
         {
-            throw new Exception();
+            return new Order { Id = Guid.NewGuid().ToString() };
         }
 
-        private string id;
+        
 
     }
 }

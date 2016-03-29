@@ -4,19 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using YDB.Domain.Model.IdentityAccess;
+using YDB.Domain.Model.Orders;
 namespace YDB.InfrastructureLayer
 {
-  public  class MembershipRepository
+  public  class OrderRepository
     {
-        Common.Repository.IRepository< Membership> repository;
+        Common.Repository.IRepository<Order > repository;
 
-        public MembershipRepository(Common.Repository.IRepository<Membership> repository)
+        public OrderRepository(Common.Repository.IRepository<Order> repository)
         {
             this.repository = repository;
         }
-        public void Add(Membership member)
+        public void Add(Order order)
         {
-            this.repository.Add(member);
+            this.repository.Add(order);
         }
     }
 }
